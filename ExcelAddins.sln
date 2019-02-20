@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.28010.2048
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ScriptAddin", "ScriptAddin\ScriptAddin.csproj", "{CF5C7616-1F7A-4E42-9743-433DAF3DDD17}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TIDB", "TIDB\TIDB.csproj", "{D324250F-2A92-4F66-86F9-A54FA4877570}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CF5C7616-1F7A-4E42-9743-433DAF3DDD17}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF5C7616-1F7A-4E42-9743-433DAF3DDD17}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF5C7616-1F7A-4E42-9743-433DAF3DDD17}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF5C7616-1F7A-4E42-9743-433DAF3DDD17}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D324250F-2A92-4F66-86F9-A54FA4877570}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D324250F-2A92-4F66-86F9-A54FA4877570}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D324250F-2A92-4F66-86F9-A54FA4877570}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D324250F-2A92-4F66-86F9-A54FA4877570}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
