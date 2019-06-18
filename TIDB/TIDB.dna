@@ -1,6 +1,4 @@
 <DnaLibrary Name="TIDB"  RuntimeVersion="v4.0" >
 	<ExternalLibrary Path="TIDB.dll" Pack="true"/>
 	<Reference Path="Microsoft.Office.Interop.Excel.dll" Pack="true" />
-	<Reference Path="Microsoft.Vbe.Interop.dll" Pack="true" />
-	<Reference Path="office.dll" Pack="true" />
 </DnaLibrary>
