@@ -17,9 +17,9 @@ namespace Test
 		}
 
 		private void button1_Click(object sender, EventArgs e) {
-			ulong num = ulong.Parse(textBox1.Text);
+			decimal.TryParse(textBox1.Text, out decimal num);
 
-			textBox2.Text = XlFunctions.NumToString(num);
+			textBox2.Text = XlFunctions.GeoMoney(num,"{l} ლ. {t} თ.");
 		}
 	}
 }

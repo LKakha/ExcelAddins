@@ -13,23 +13,20 @@ public static class XlFunctions
 		new [] {null,"ათას","მილიონ","მილიარდ","ტრილიონ","კვადრილიონ","კვინტილიონ" }
 	};
 
-	[ExcelFunction(Description = "რიცხვი ტექსტურად")]
-	public static string NumToString(ulong num) {
-		var triada = new short[GeoNum[3].Length];
-		var i = 0;
+	[ExcelFunction(Description = "მთელი რიცხვი ტექსტურად")]
+	public static string NumToString(long num) {
+		if (num == 0) return "ნული";
 		var alltxt = new StringBuilder();
 		var txt = new StringBuilder();
 		const string ი = "ი";
 		const string space = " ";
 
-		while (num > 0) {
-			triada[i] = (short)(num % 1000);
-			num /= 1000;
-			i++;
-		}
+		var i = 0;
 
-		for (i = triada.Length - 1; i >= 0; i--) {
-			var t = triada[i];
+		while (num > 0) {
+			var t = (short)(num % 1000);
+			num /= 1000;
+
 			if (t > 0) {
 				txt.Clear();
 				int s3 = t / 100;
@@ -40,11 +37,28 @@ public static class XlFunctions
 				if (s2 > 0) txt.Append(GeoNum[1][s2]);
 				if (s1 > 0) txt.Append((s2 > 0) ? "და" : null).Append(GeoNum[0][s1]); else txt.Append(ი);
 				if (i > 0) txt.Append(space).Append(GeoNum[3][i]).Append(space);
-
-				alltxt.Append(txt);
+				alltxt.Insert(0, txt);
 			}
+			i++;
 		}
 		if (alltxt[alltxt.Length - 1] != ი[0]) alltxt.Replace(space, ი, alltxt.Length - 1, 1);
 		return alltxt.ToString();
 	}
+
+	[ExcelFunction(Description = "თანხა ტექსტურად")]
+	public static string GeoMoney(decimal num, string format = null) {
+		long ლარი = (long)num;
+		short თეთრი = (short)((num - ლარი) * 100);
+
+		if (!string.IsNullOrWhiteSpace(format)) {
+			var ret = format;
+			ret = ret.Replace("{L}", NumToString(ლარი));
+			ret = ret.Replace("{T}", NumToString((long)თეთრი));
+			ret = ret.Replace("{l}", ლარი.ToString());
+			ret = ret.Replace("{t}", თეთრი.ToString("D2"));
+			return ret;
+		}
+		return $"{NumToString(ლარი)} ლარი {NumToString((long)თეთრი)} თეთრი";
+	}
+
 }
