@@ -64,10 +64,13 @@ namespace ScriptAddin
 					for (int col = areaCol; col <= areaCol2; col++) {
 						for (int row = areaRow; row <= areaRow2; row++) {
 							try {
-								var value = ((Excel.Range)app.Cells[row, col]).Value.ToString();
-								if (!string.IsNullOrWhiteSpace(value)) {
-									value = convertInternal(value, eFrom, eTo);
-									((Excel.Range)app.Cells[row, col]).Value = value;
+								var cellValue = ((Excel.Range)app.Cells[row, col]).Value;
+								if (cellValue != null) {
+									var value = cellValue.ToString();
+									if (!string.IsNullOrWhiteSpace(value)) {
+										value = convertInternal(value, eFrom, eTo);
+										((Excel.Range)app.Cells[row, col]).Value = value;
+									}
 								}
 							}
 							catch (Exception ex) {

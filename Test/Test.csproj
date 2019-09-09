@@ -90,6 +90,10 @@
       <Project>{cf5c7616-1f7a-4e42-9743-433daf3ddd17}</Project>
       <Name>ScriptAddin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\XLF\XLF.csproj">
+      <Project>{d324250f-2a92-4f66-86f9-a54fa4877570}</Project>
+      <Name>XLF</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

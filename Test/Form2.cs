@@ -17,7 +17,9 @@ namespace Test
 		}
 
 		private void button1_Click(object sender, EventArgs e) {
-			MessageBox.Show(ScriptAddin.Convertor.GetEncodingCount().ToString());
+			ulong num = ulong.Parse(textBox1.Text);
+
+			textBox2.Text = XlFunctions.NumToString(num);
 		}
 	}
 }

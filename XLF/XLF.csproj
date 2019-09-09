@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CFB5F081-5CA7-46BD-AAC4-2F68AB997E6C}</ProjectGuid>
+    <ProjectGuid>{D324250F-2A92-4F66-86F9-A54FA4877570}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TIDB</RootNamespace>
-    <AssemblyName>TIDB</AssemblyName>
+    <RootNamespace>XLF</RootNamespace>
+    <AssemblyName>XLF</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -50,14 +50,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CustomUI.cs" />
-    <Compile Include="MyFunctions.cs" />
+    <Compile Include="XlFunctions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
     <None Include="Properties\ExcelDna.Build.props" />
-    <None Include="TIDB.dna">
+    <None Include="XLF.dna">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

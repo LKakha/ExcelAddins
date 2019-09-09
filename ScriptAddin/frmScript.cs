@@ -60,8 +60,7 @@ namespace ScriptAddin
 			return node;
 		}
 
-		private ScriptItem CurrentScript
-		{
+		private ScriptItem CurrentScript {
 			get { return currentScript; }
 			set {
 				currentScript = value;
@@ -246,7 +245,7 @@ namespace ScriptAddin
 		private void btnRun_Click(object sender, EventArgs e) {
 			var code = CodeEditor.Text;
 			var app = (Excel.Application)ExcelDnaUtil.Application;
-			Microsoft.ClearScript.Windows.WindowsScriptEngine engine = null;
+			Microsoft.ClearScript.ScriptEngine engine = null;
 			var scriptExt = new ScriptExtension();
 			Excel.XlCalculation calcMode = app.Calculation;
 			lblStatus.Text = string.Empty;
@@ -289,15 +288,16 @@ namespace ScriptAddin
 			using (engine) {
 				var flags = Microsoft.ClearScript.HostItemFlags.DirectAccess;
 				var app = (Excel.Application)ExcelDnaUtil.Application;
-				engine.AddHostObject("App", flags, app);
+				engine.AddHostObject("Excel", flags, app);
 				engine.AddHostObject("Book", flags, app.ActiveWorkbook);
-				var sheet= (Excel.Worksheet)app.ActiveSheet;
+				var sheet = (Excel.Worksheet)app.ActiveSheet;
 				engine.AddHostObject("Sheet", flags, sheet);
 				engine.AddHostObject("Cells", flags, sheet.Cells);
 				engine.AddHostObject("Sel", flags, (Excel.Range)app.Selection);
-				engine.AddHostObject("Ext", new ScriptExtension());
 
-				engine.AddHostObject("CLR", new Microsoft.ClearScript.HostTypeCollection("mscorlib", "System", "System.Core"));
+				engine.AddHostObject("host", new Microsoft.ClearScript.HostFunctions());
+				engine.AddHostObject("ext", new ScriptExtension());
+				engine.AddHostObject("clr", new Microsoft.ClearScript.HostTypeCollection("mscorlib", "System", "System.Core"));
 
 				engine.Execute(code);
 				engine.CollectGarbage(false);

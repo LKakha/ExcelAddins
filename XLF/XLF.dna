@@ -1,0 +1,4 @@
+<DnaLibrary Name="XLF"  RuntimeVersion="v4.0" >
+	<ExternalLibrary Path="XLF.dll" Pack="true"/>
+	<Reference Path="Microsoft.Office.Interop.Excel.dll" Pack="true" />
+</DnaLibrary>
