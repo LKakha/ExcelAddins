@@ -61,4 +61,15 @@ public static class XlFunctions
 		return $"{NumToString(ლარი)} ლარი {NumToString((long)თეთრი)} თეთრი";
 	}
 
+	[ExcelFunction]
+	public static object Switch(object value, object val1, object ret1, object val2, object ret2, object val3, object ret3, object val4, object ret4, object val5, object ret5) {
+		if (Equals(value, val1)) return ret1;
+		if (Equals(value, val2)) return ret2;
+		if (Equals(value, val3)) return ret3;
+		if (Equals(value, val4)) return ret4;
+		if (Equals(value, val5)) return ret5;
+
+		return null;
+	}
+
 }
