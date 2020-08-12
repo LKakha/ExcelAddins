@@ -26,13 +26,24 @@ namespace ScriptAddin
 
 		private void frmScripts_Load(object sender, EventArgs e) {
 			CodeEditor.Control.Options.IndentationSize = 2;
-			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(System.IO.Path.GetDirectoryName(ExcelDnaUtil.XllPath) + "\\Scripts.db");
-			//db = Db4objects.Db4o.Db4oEmbedded.OpenFile("Scripts.db");
-			ScriptList = (from i in db.Query<ScriptItem>() orderby i.Type, i.Name select i).ToList();
+			getEngineTypes();
+			loadScripts();
 			loadTree(null, ref ScriptList);
 			CurrentScript = null;
 		}
-
+		private void getEngineTypes() {
+			var engineTypes = ScriptRunner.SupportedEngines;
+			foreach (var e in engineTypes) {
+				btnNew.DropDownItems.Add(new ToolStripMenuItem($"New {e}", null, btnNew_Click) {
+					Tag = e
+				}); ;
+			}
+		}
+		private void loadScripts() {
+			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(System.IO.Path.GetDirectoryName(ExcelDnaUtil.XllPath) + "\\Scripts.db");
+			//db = Db4objects.Db4o.Db4oEmbedded.OpenFile("Scripts.db");
+			ScriptList = (from i in db.Query<ScriptItem>() orderby i.Type, i.Name select i).ToList();
+		}
 		private void loadTree(TreeNode parentNode, ref List<ScriptItem> items) {
 			var parentId = Guid.Empty;
 			if (parentNode != null) parentId = (Guid)parentNode.Tag;
@@ -76,16 +87,12 @@ namespace ScriptAddin
 					}
 					this.Text = caption;
 				} else {
-					CodeEditor.Text = currentScript.Code;
-					switch (currentScript.Type) {
-						case ScriptType.VB:
-							CodeEditor.SyntaxHighlighting = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition("VB");
-							break;
-						case ScriptType.JS:
-							CodeEditor.SyntaxHighlighting = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition("JavaScript");
-							break;
-					}
+					ScriptRunner.Script = currentScript;
+					CodeEditor.SyntaxHighlighting = ScriptRunner.SyntaxHighlighting;
+
 					this.Text = $"{caption} : {currentScript.Name} : {currentScript.Type}";
+					CodeEditor.Text = currentScript.Code;
+
 					btnRun.Enabled = true;
 					CodeEditor.IsEnabled = true;
 					btnSave.Enabled = true;
@@ -97,13 +104,9 @@ namespace ScriptAddin
 
 		private void btnNew_Click(object sender, EventArgs e) {
 			var btn = (ToolStripMenuItem)sender;
-			if (btn == btnFolder) {
-				createNew(null, ScriptType.Folder);
-			} else if (btn == btnVB) {
-				createNew(null, ScriptType.VB);
-			} else if (btn == btnJS) {
-				createNew(null, ScriptType.JS);
-			} else return;
+			if (btn.Tag is ScriptType type) {
+				createNew(null, type);
+			}
 		}
 
 		private void createNew(ScriptItem item, ScriptType type = ScriptType.Folder) {
@@ -243,71 +246,23 @@ namespace ScriptAddin
 		#region Execution
 
 		private void btnRun_Click(object sender, EventArgs e) {
-			var code = CodeEditor.Text;
-			var app = (Excel.Application)ExcelDnaUtil.Application;
-			Microsoft.ClearScript.ScriptEngine engine = null;
-			var scriptExt = new ScriptExtension();
-			Excel.XlCalculation calcMode = app.Calculation;
-			lblStatus.Text = string.Empty;
-			switch (CurrentScript.Type) {
-				case ScriptType.VB:
-					engine = new Microsoft.ClearScript.Windows.VBScriptEngine();
-					break;
-				case ScriptType.JS:
-					engine = new Microsoft.ClearScript.Windows.JScriptEngine();
-					break;
+			try {
+				lblStatus.Text = string.Empty;
+				var result = ScriptRunner.Execute(CodeEditor.Text);
+				lblStatus.Text = result;
 			}
-
-			if (engine != null) {
-				try {
-					app.ScreenUpdating = false;
-					app.Calculation = Excel.XlCalculation.xlCalculationManual;
-					var timer = new System.Diagnostics.Stopwatch();
-
-					timer.Start();
-					ClearScript_Execute(engine, code);
-					timer.Stop();
-
-					var cellCount = ((Excel.Range)app.Selection).Cells.Count;
-					lblStatus.Text = $"{cellCount} cells/{timer.Elapsed.Duration().ToString("mm\\:ss\\.fff")}";
-				}
-				catch (Microsoft.ClearScript.ScriptEngineException ex) {
-					MessageBox.Show(ex.ErrorDetails, $"{CurrentScript.Type} Script");
-				}
-				catch (Exception ex) {
-					MessageBox.Show(ex.Message, "ScriptAddin");
-				}
-				finally {
-					app.Calculation = calcMode;
-					app.ScreenUpdating = true;
-				}
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
 			}
 		}
-
-		private void ClearScript_Execute(Microsoft.ClearScript.ScriptEngine engine, string code) {
-			using (engine) {
-				var flags = Microsoft.ClearScript.HostItemFlags.DirectAccess;
-				var app = (Excel.Application)ExcelDnaUtil.Application;
-				engine.AddHostObject("Excel", flags, app);
-				engine.AddHostObject("Book", flags, app.ActiveWorkbook);
-				var sheet = (Excel.Worksheet)app.ActiveSheet;
-				engine.AddHostObject("Sheet", flags, sheet);
-				engine.AddHostObject("Cells", flags, sheet.Cells);
-				engine.AddHostObject("Sel", flags, (Excel.Range)app.Selection);
-
-				engine.AddHostObject("host", new Microsoft.ClearScript.HostFunctions());
-				engine.AddHostObject("ext", new ScriptExtension());
-				engine.AddHostObject("clr", new Microsoft.ClearScript.HostTypeCollection("mscorlib", "System", "System.Core"));
-
-				engine.Execute(code);
-				engine.CollectGarbage(false);
-			}
-		}
-
 		#endregion
 
 		private void Me_FormClosing(object sender, FormClosingEventArgs e) {
 			db.Close();
+		}
+
+		private void ActivateForm(object sender, EventArgs e) {
+			this.Activate();
 		}
 	}
 }

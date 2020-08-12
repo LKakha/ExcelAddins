@@ -88,6 +88,11 @@
     </Compile>
     <Compile Include="Convertor.cs" />
     <Compile Include="CustomUI.cs" />
+    <Compile Include="Engines\ClearScriptExtensions.cs" />
+    <Compile Include="Engines\IEngine.cs" />
+    <Compile Include="Engines\JsV8Engine.cs" />
+    <Compile Include="Engines\JsEngine.cs" />
+    <Compile Include="Engines\VbEngine.cs" />
     <Compile Include="frmEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -107,6 +112,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Script.cs" />
+    <Compile Include="ScriptRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\ExcelDna.Build.props" />

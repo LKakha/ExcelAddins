@@ -44,6 +44,7 @@
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.CodeEditorHost = new System.Windows.Forms.Integration.ElementHost();
 			this.CodeEditor = new ScriptAddin.CodeEditor();
+			this.btnJSV8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -78,6 +79,7 @@
 			this.btnRun.Size = new System.Drawing.Size(28, 28);
 			this.btnRun.Text = "Run";
 			this.btnRun.Click += new System.EventHandler(this.btnRun_Click);
+			this.btnRun.MouseEnter += new System.EventHandler(this.ActivateForm);
 			// 
 			// toolStripSeparator1
 			// 
@@ -90,7 +92,8 @@
 			this.btnNew.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.btnJS,
             this.btnVB,
-            this.btnFolder});
+            this.btnFolder,
+            this.btnJSV8});
 			this.btnNew.Image = ((System.Drawing.Image)(resources.GetObject("btnNew.Image")));
 			this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnNew.Name = "btnNew";
@@ -137,7 +140,7 @@
 			// 
 			this.btnSaveAs.Image = ((System.Drawing.Image)(resources.GetObject("btnSaveAs.Image")));
 			this.btnSaveAs.Name = "btnSaveAs";
-			this.btnSaveAs.Size = new System.Drawing.Size(188, 30);
+			this.btnSaveAs.Size = new System.Drawing.Size(114, 22);
 			this.btnSaveAs.Text = "Save As";
 			this.btnSaveAs.Click += new System.EventHandler(this.btnSaveAs_Click);
 			// 
@@ -224,6 +227,12 @@
 			this.CodeEditorHost.Text = "elementHost1";
 			this.CodeEditorHost.Child = this.CodeEditor;
 			// 
+			// btnJSV8
+			// 
+			this.btnJSV8.Name = "btnJSV8";
+			this.btnJSV8.Size = new System.Drawing.Size(188, 30);
+			this.btnJSV8.Text = "New JsV8 Script";
+			// 
 			// frmScript
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,5 +276,6 @@
 		private System.Windows.Forms.ToolStripMenuItem btnFolder;
 		private System.Windows.Forms.ToolStripSplitButton btnSave;
 		private System.Windows.Forms.ToolStripMenuItem btnSaveAs;
+		private System.Windows.Forms.ToolStripMenuItem btnJSV8;
 	}
 }
