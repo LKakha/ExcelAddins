@@ -10,7 +10,7 @@ using Avalon = ICSharpCode.AvalonEdit;
 
 namespace ScriptAddin.Engines
 {
-	interface IEngine
+	public interface IEngine
 	{
 		ScriptType Type { get; }
 		Avalon.Highlighting.IHighlightingDefinition HighlightingDefinition { get; }

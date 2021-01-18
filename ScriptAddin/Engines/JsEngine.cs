@@ -10,7 +10,7 @@ using Microsoft.ClearScript;
 
 namespace ScriptAddin.Engines
 {
-	class JsEngine : IEngine
+	public class JsEngine : IEngine
 	{
 		private static Avalon.Highlighting.IHighlightingDefinition highlightingDefinition = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition("JavaScript");
 		private const HostItemFlags flags = HostItemFlags.DirectAccess;
@@ -23,7 +23,7 @@ namespace ScriptAddin.Engines
 			try {
 				using (engine = new JScriptEngine()) {
 					initEngine(engine);
-					initAction(this);
+					initAction?.Invoke(this);
 
 					engine.Execute(code);
 					engine.CollectGarbage(false);

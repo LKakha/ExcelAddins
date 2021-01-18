@@ -10,7 +10,7 @@ using Microsoft.ClearScript;
 
 namespace ScriptAddin.Engines
 {
-	class VbEngine : IEngine
+	public class VbEngine : IEngine
 	{
 		private static Avalon.Highlighting.IHighlightingDefinition highlightingDefinition = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition("VB");
 		private const HostItemFlags flags = HostItemFlags.DirectAccess;

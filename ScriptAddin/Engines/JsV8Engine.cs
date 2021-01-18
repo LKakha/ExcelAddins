@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using Avalon = ICSharpCode.AvalonEdit;
 using Microsoft.ClearScript;
 using Microsoft.ClearScript.V8;
+using ExcelDna.Integration;
 
 namespace ScriptAddin.Engines
 {
-	class JsV8Engine : IEngine
+	public class JsV8Engine : IEngine
 	{
 		private static Avalon.Highlighting.IHighlightingDefinition highlightingDefinition = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition("JavaScript");
 		private const HostItemFlags flags = HostItemFlags.DirectAccess;
@@ -25,8 +26,9 @@ namespace ScriptAddin.Engines
 					initEngine(engine);
 					initAction(this);
 
-					engine.Execute(code);
-					engine.CollectGarbage(false);
+					var bin = engine.Compile(code);
+					engine.Execute(bin);
+					engine.CollectGarbage(true);
 				}
 			}
 			catch (ScriptEngineException ex) {
@@ -38,14 +40,13 @@ namespace ScriptAddin.Engines
 		}
 
 		private void initEngine(V8ScriptEngine engine) {
-			engine.AllowReflection = true;
 			engine.AddHostObject("host", flags, new HostFunctions());
 			engine.AddHostObject("ext", flags, new ScriptExtension());
 			engine.AddHostObject("clr", flags, new HostTypeCollection("mscorlib", "System", "System.Core"));
 		}
 
 		public void AddHostObject(string name, object obj) {
-			engine?.AddHostObject(name, flags, obj);
+			//var a=ExcelDna.Integration.			engine?.AddHostObject(name, flags, obj);
 		}
 	}
 }

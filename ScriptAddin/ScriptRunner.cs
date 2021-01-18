@@ -56,9 +56,8 @@ namespace ScriptAddin
 					currentEngine.Execute(code, engine => {
 						engine.AddHostObject("Excel", ExcelApp);
 						engine.AddHostObject("Book", ExcelApp.ActiveWorkbook);
-						var sheet = (Excel.Worksheet)ExcelApp.ActiveSheet;
+						var sheet = ExcelApp.ActiveSheet;
 						engine.AddHostObject("Sheet", sheet);
-						engine.AddHostObject("Cells", sheet.Cells);
 						engine.AddHostObject("Sel", (Excel.Range)ExcelApp.Selection);
 					});
 
