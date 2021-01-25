@@ -20,6 +20,11 @@ namespace ScriptAddin
 			set { Editor.SyntaxHighlighting = value; }
 		}
 
+		public bool IsReadOnly {
+			get { return Editor.IsReadOnly; }
+			set { Editor.IsReadOnly = value; }
+		}
+
 		public string Text
 		{
 			get { return Editor.Text; }

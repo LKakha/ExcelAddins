@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Avalon = ICSharpCode.AvalonEdit;
 
@@ -75,13 +76,13 @@ namespace ScriptAddin
 
 				if (ScriptRunner.CanRun) {
 					btnRun.Enabled = true;
-					CodeEditor.IsEnabled = true;
+					CodeEditor.IsReadOnly = false;
 					btnSave.Enabled = true;
 					btnDelete.Enabled = true;
 					this.Text = $"{caption} : {currentScript.Name} : {currentScript.Type}";
 				} else {
 					btnRun.Enabled = false;
-					CodeEditor.IsEnabled = false;
+					CodeEditor.IsReadOnly = true;
 					btnSave.Enabled = false;
 					btnDelete.Enabled = currentScript != null && !ScriptList.Any(x => x.ParentID == currentScript.ID);
 				}
@@ -250,5 +251,6 @@ namespace ScriptAddin
 		private void ActivateForm(object sender, EventArgs e) {
 			this.Activate();
 		}
+
 	}
 }
