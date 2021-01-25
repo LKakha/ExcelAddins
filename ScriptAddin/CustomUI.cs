@@ -38,13 +38,6 @@ namespace ScriptAddin
 			try {
 				Excel = (Microsoft.Office.Interop.Excel.Application)ExcelDna.Integration.ExcelDnaUtil.Application;
 				Ribbon = RibbonUI;
-
-				ScriptRunner.AddEngine(new VbEngine());
-				ScriptRunner.AddEngine(new JsEngine());
-				ScriptRunner.AddEngine(new JsV8Engine());
-
-
-
 			}
 			catch (Exception ex) {
 				MessageBox.Show(ex.Message);

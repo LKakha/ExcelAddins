@@ -31,9 +31,11 @@
 			this.btnRun = new System.Windows.Forms.ToolStripButton();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
 			this.btnNew = new System.Windows.Forms.ToolStripDropDownButton();
-			this.btnJS = new System.Windows.Forms.ToolStripMenuItem();
-			this.btnVB = new System.Windows.Forms.ToolStripMenuItem();
-			this.btnFolder = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuJS = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuVB = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuJSV8 = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuCSharp = new System.Windows.Forms.ToolStripMenuItem();
+			this.mnuFolder = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnSave = new System.Windows.Forms.ToolStripSplitButton();
 			this.btnSaveAs = new System.Windows.Forms.ToolStripMenuItem();
 			this.btnDelete = new System.Windows.Forms.ToolStripButton();
@@ -44,7 +46,6 @@
 			this.imageList1 = new System.Windows.Forms.ImageList(this.components);
 			this.CodeEditorHost = new System.Windows.Forms.Integration.ElementHost();
 			this.CodeEditor = new ScriptAddin.CodeEditor();
-			this.btnJSV8 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStrip1.SuspendLayout();
 			((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
 			this.splitContainer1.Panel1.SuspendLayout();
@@ -90,39 +91,62 @@
 			// 
 			this.btnNew.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
 			this.btnNew.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.btnJS,
-            this.btnVB,
-            this.btnFolder,
-            this.btnJSV8});
+            this.mnuJS,
+            this.mnuVB,
+            this.mnuJSV8,
+            this.mnuCSharp,
+            this.mnuFolder});
 			this.btnNew.Image = ((System.Drawing.Image)(resources.GetObject("btnNew.Image")));
 			this.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta;
 			this.btnNew.Name = "btnNew";
 			this.btnNew.Size = new System.Drawing.Size(37, 28);
 			this.btnNew.Text = "Create New";
 			// 
-			// btnJS
+			// mnuJS
 			// 
-			this.btnJS.Image = ((System.Drawing.Image)(resources.GetObject("btnJS.Image")));
-			this.btnJS.Name = "btnJS";
-			this.btnJS.Size = new System.Drawing.Size(188, 30);
-			this.btnJS.Text = "New JScript";
-			this.btnJS.Click += new System.EventHandler(this.btnNew_Click);
+			this.mnuJS.Image = ((System.Drawing.Image)(resources.GetObject("mnuJS.Image")));
+			this.mnuJS.Name = "mnuJS";
+			this.mnuJS.Size = new System.Drawing.Size(156, 22);
+			this.mnuJS.Tag = "JScript";
+			this.mnuJS.Text = "New JScript";
+			this.mnuJS.Visible = false;
+			this.mnuJS.Click += new System.EventHandler(this.btnNew_Click);
 			// 
-			// btnVB
+			// mnuVB
 			// 
-			this.btnVB.Image = ((System.Drawing.Image)(resources.GetObject("btnVB.Image")));
-			this.btnVB.Name = "btnVB";
-			this.btnVB.Size = new System.Drawing.Size(188, 30);
-			this.btnVB.Text = "New VBScript";
-			this.btnVB.Click += new System.EventHandler(this.btnNew_Click);
+			this.mnuVB.Image = ((System.Drawing.Image)(resources.GetObject("mnuVB.Image")));
+			this.mnuVB.Name = "mnuVB";
+			this.mnuVB.Size = new System.Drawing.Size(156, 22);
+			this.mnuVB.Tag = "VbScript";
+			this.mnuVB.Text = "New VBScript";
+			this.mnuVB.Visible = false;
+			this.mnuVB.Click += new System.EventHandler(this.btnNew_Click);
 			// 
-			// btnFolder
+			// mnuJSV8
 			// 
-			this.btnFolder.Image = ((System.Drawing.Image)(resources.GetObject("btnFolder.Image")));
-			this.btnFolder.Name = "btnFolder";
-			this.btnFolder.Size = new System.Drawing.Size(188, 30);
-			this.btnFolder.Text = "New Folder";
-			this.btnFolder.Click += new System.EventHandler(this.btnNew_Click);
+			this.mnuJSV8.Name = "mnuJSV8";
+			this.mnuJSV8.Size = new System.Drawing.Size(156, 22);
+			this.mnuJSV8.Tag = "JsV8";
+			this.mnuJSV8.Text = "New JsV8 Script";
+			this.mnuJSV8.Visible = false;
+			this.mnuJSV8.Click += new System.EventHandler(this.btnNew_Click);
+			// 
+			// mnuCSharp
+			// 
+			this.mnuCSharp.Name = "mnuCSharp";
+			this.mnuCSharp.Size = new System.Drawing.Size(156, 22);
+			this.mnuCSharp.Tag = "CSharp";
+			this.mnuCSharp.Text = "CSharp";
+			this.mnuCSharp.Click += new System.EventHandler(this.btnNew_Click);
+			// 
+			// mnuFolder
+			// 
+			this.mnuFolder.Image = ((System.Drawing.Image)(resources.GetObject("mnuFolder.Image")));
+			this.mnuFolder.Name = "mnuFolder";
+			this.mnuFolder.Size = new System.Drawing.Size(156, 22);
+			this.mnuFolder.Tag = "Folder";
+			this.mnuFolder.Text = "New Folder";
+			this.mnuFolder.Click += new System.EventHandler(this.btnNew_Click);
 			// 
 			// btnSave
 			// 
@@ -227,12 +251,6 @@
 			this.CodeEditorHost.Text = "elementHost1";
 			this.CodeEditorHost.Child = this.CodeEditor;
 			// 
-			// btnJSV8
-			// 
-			this.btnJSV8.Name = "btnJSV8";
-			this.btnJSV8.Size = new System.Drawing.Size(188, 30);
-			this.btnJSV8.Text = "New JsV8 Script";
-			// 
 			// frmScript
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -267,15 +285,16 @@
 		private System.Windows.Forms.ToolStripButton btnDelete;
 		private System.Windows.Forms.ToolStripDropDownButton btnNew;
 		private System.Windows.Forms.ToolStripButton btnHelp;
-		private System.Windows.Forms.ToolStripMenuItem btnJS;
-		private System.Windows.Forms.ToolStripMenuItem btnVB;
+		private System.Windows.Forms.ToolStripMenuItem mnuJS;
+		private System.Windows.Forms.ToolStripMenuItem mnuVB;
 		private System.Windows.Forms.Integration.ElementHost CodeEditorHost;
 		private CodeEditor CodeEditor;
 		private System.Windows.Forms.ToolStripLabel lblStatus;
 		private System.Windows.Forms.ImageList imageList1;
-		private System.Windows.Forms.ToolStripMenuItem btnFolder;
+		private System.Windows.Forms.ToolStripMenuItem mnuFolder;
 		private System.Windows.Forms.ToolStripSplitButton btnSave;
 		private System.Windows.Forms.ToolStripMenuItem btnSaveAs;
-		private System.Windows.Forms.ToolStripMenuItem btnJSV8;
+		private System.Windows.Forms.ToolStripMenuItem mnuJSV8;
+		private System.Windows.Forms.ToolStripMenuItem mnuCSharp;
 	}
 }

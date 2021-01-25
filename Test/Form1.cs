@@ -17,14 +17,14 @@ namespace Test
 		}
 
 		private void button1_Click(object sender, EventArgs e) {
-			var code = textBox1.Text;
-			var engine = new ScriptAddin.Engines.JsEngine();
-			try {
-				engine.Execute(code);
-			}
-			catch (Exception ex) {
-				MessageBox.Show(ex.Message);
-			}
+			//var code = textBox1.Text;
+			//var engine = new ScriptAddin.Engines.JsEngine();
+			//try {
+			//	engine.Execute(code);
+			//}
+			//catch (Exception ex) {
+			//	MessageBox.Show(ex.Message);
+			//}
 		}
 	}
 }

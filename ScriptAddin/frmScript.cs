@@ -5,7 +5,6 @@ using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using Avalon = ICSharpCode.AvalonEdit;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace ScriptAddin
 {
@@ -26,19 +25,11 @@ namespace ScriptAddin
 
 		private void frmScripts_Load(object sender, EventArgs e) {
 			CodeEditor.Control.Options.IndentationSize = 2;
-			getEngineTypes();
 			loadScripts();
 			loadTree(null, ref ScriptList);
 			CurrentScript = null;
 		}
-		private void getEngineTypes() {
-			var engineTypes = ScriptRunner.SupportedEngines;
-			foreach (var e in engineTypes) {
-				btnNew.DropDownItems.Add(new ToolStripMenuItem($"New {e}", null, btnNew_Click) {
-					Tag = e
-				}); ;
-			}
-		}
+
 		private void loadScripts() {
 			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(System.IO.Path.GetDirectoryName(ExcelDnaUtil.XllPath) + "\\Scripts.db");
 			//db = Db4objects.Db4o.Db4oEmbedded.OpenFile("Scripts.db");
@@ -75,47 +66,41 @@ namespace ScriptAddin
 			get { return currentScript; }
 			set {
 				currentScript = value;
-				if (currentScript == null || currentScript.Type == ScriptType.Folder) {
-					CodeEditor.IsEnabled = false;
-					CodeEditor.Text = null;
-					btnRun.Enabled = false;
-					btnSave.Enabled = false;
-					if (currentScript == null)
-						btnDelete.Enabled = false;
-					else {
-						btnDelete.Enabled = !ScriptList.Any(x => x.ParentID == currentScript.ID);
-					}
-					this.Text = caption;
-				} else {
-					ScriptRunner.Script = currentScript;
-					CodeEditor.SyntaxHighlighting = ScriptRunner.SyntaxHighlighting;
-
+				ScriptRunner.Script = currentScript;
+				CodeEditor.SyntaxHighlighting = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition(ScriptRunner.SyntaxHighlightingName ?? string.Empty);
+				CodeEditor.Text = currentScript?.Code;
+				if (currentScript != null && currentScript.Type != ScriptType.Folder) {
 					this.Text = $"{caption} : {currentScript.Name} : {currentScript.Type}";
-					CodeEditor.Text = currentScript.Code;
+				} else { this.Text = caption; }
 
+				if (ScriptRunner.CanRun) {
 					btnRun.Enabled = true;
 					CodeEditor.IsEnabled = true;
 					btnSave.Enabled = true;
 					btnDelete.Enabled = true;
+					this.Text = $"{caption} : {currentScript.Name} : {currentScript.Type}";
+				} else {
+					btnRun.Enabled = false;
+					CodeEditor.IsEnabled = false;
+					btnSave.Enabled = false;
+					btnDelete.Enabled = currentScript != null && !ScriptList.Any(x => x.ParentID == currentScript.ID);
 				}
 			}
 		}
 		private ScriptItem currentScript;
 
+
+		#region Edit
 		private void btnNew_Click(object sender, EventArgs e) {
 			var btn = (ToolStripMenuItem)sender;
-			if (btn.Tag is ScriptType type) {
+			if (Enum.TryParse<ScriptType>(btn.Tag.ToString(), out var type)) {
 				createNew(null, type);
 			}
 		}
 
 		private void createNew(ScriptItem item, ScriptType type = ScriptType.Folder) {
 			string name;
-			if (item == null) {
-				item = ScriptItem.CreateScript(type);
-			} else {
-				item = ScriptItem.CopyScript(item);
-			}
+			item = (item == null) ? ScriptItem.CreateScript(type) : ScriptItem.CopyScript(item);
 			name = getNewName(item.Name);
 			if (name == null) return;
 			item.Name = name;
@@ -178,6 +163,7 @@ namespace ScriptAddin
 			var id = (Guid)node.Tag;
 			return ScriptList.First(x => x.ID == id);
 		}
+		#endregion
 
 		#region TreeView
 		private void tvScripts_AfterSelect(object sender, TreeViewEventArgs e) {

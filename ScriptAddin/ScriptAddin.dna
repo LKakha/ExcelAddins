@@ -1,10 +1,9 @@
 <DnaLibrary Name="ScriptAddin" RuntimeVersion="v4.0">
 	<ExternalLibrary Path="ScriptAddin.dll" Pack="true" />
-	<Reference Path="Microsoft.Office.Interop.Excel.dll" Pack="true" />
 	<Reference Path="ICSharpCode.AvalonEdit.dll" Pack="true" />
-	<Reference Path="ClearScript.dll" Pack="true" />
 	<Reference Path="Db4objects.Db4o.Data.Services.dll" Pack="true" />
 	<Reference Path="Db4objects.Db4o.dll" Pack="true" />
 	<Reference Path="Db4objects.Db4o.Linq.dll" Pack="true" />
-	<Reference Path="Mono.Reflection.dll" Pack="true" />
+	<Reference Path="CSScriptLibrary.dll" Pack="true" />
+
 </DnaLibrary>

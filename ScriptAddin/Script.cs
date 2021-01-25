@@ -9,10 +9,11 @@ namespace ScriptAddin
 	public enum ScriptType
 	{
 		Folder,
-		VB,
-		JS,
-		JSV8,
-		Python
+		VbScript,
+		JScript,
+		JsV8,
+		Python,
+		CSharp
 	}
 
 	public class ScriptItem

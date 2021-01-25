@@ -1,4 +1,5 @@
 ﻿using ICSharpCode.AvalonEdit;
+using ScriptAddin.Host;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,13 +11,12 @@ using Avalon = ICSharpCode.AvalonEdit;
 
 namespace ScriptAddin.Engines
 {
-	public interface IEngine
+	internal interface IEngine
 	{
 		ScriptType Type { get; }
-		Avalon.Highlighting.IHighlightingDefinition HighlightingDefinition { get; }
+		string SyntaxHighlightingName { get; }
 
-		void AddHostObject(string name, object obj);
-		void Execute(string code, Action<IEngine> initAction = null);
+		void Execute(string code, HostObject host);
 
 	}
 }
