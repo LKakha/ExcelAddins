@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 
 public static class MyFunctions
 {
-	private const string ConnString = "Data Source=SQL-SERVER; Initial Catalog=TaxInfo; Persist Security Info=True; User ID=TIDB_User; Password=I7nxxr8NWsnt1; Network=DBMSSOCN";
+	private const string ConnString = "Data Source=SQL-SERVER; Initial Catalog=TaxInfo; Persist Security Info=True; User ID=TIDB_User; Password=X7Vo5t8K63hXfM2Z; Network=DBMSSOCN";
 	public static SqlConnection Conn;
 	private static SqlCommand Comm;
 	private static bool ConnectionIsValid = false;
