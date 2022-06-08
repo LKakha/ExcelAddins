@@ -5,30 +5,27 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Avalon = ICSharpCode.AvalonEdit;
+using Microsoft.ClearScript.Windows;
 using Microsoft.ClearScript;
-using Microsoft.ClearScript.V8;
-using ExcelDna.Integration;
 
 namespace ScriptAddin.Engines
 {
-	public class JsV8Engine : IEngine
+
+	internal class JsV8Engine : IEngine
 	{
-		private static Avalon.Highlighting.IHighlightingDefinition highlightingDefinition = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition("JavaScript");
-		private const HostItemFlags flags = HostItemFlags.DirectAccess;
-		public ScriptType Type => ScriptType.JSV8;
-		public Avalon.Highlighting.IHighlightingDefinition HighlightingDefinition => highlightingDefinition;
+		public ScriptType Type => ScriptType.VbScript;
+		public string SyntaxHighlightingName { get; } = "JavaScript";
 
-		private V8ScriptEngine engine;
+		private Microsoft.ClearScript.V8.V8ScriptEngine engine;
 
-		public void Execute(string code, Action<IEngine> initAction = null) {
+		public void Execute(string code, HostObject host) {
 			try {
-				using (engine = new V8ScriptEngine()) {
-					initEngine(engine);
-					initAction(this);
+				using (engine = new Microsoft.ClearScript.V8.V8ScriptEngine()) {
+					engine.AddHostObject("host", new HostFunctions());
+					engine.AddHostObject("clr", new HostTypeCollection("mscorlib", "System", "System.Core"));
 
-					var bin = engine.Compile(code);
-					engine.Execute(bin);
-					engine.CollectGarbage(true);
+					engine.Execute(code);
+					engine.CollectGarbage(false);
 				}
 			}
 			catch (ScriptEngineException ex) {
@@ -37,16 +34,6 @@ namespace ScriptAddin.Engines
 			catch (Exception ex) {
 				throw ex;
 			}
-		}
-
-		private void initEngine(V8ScriptEngine engine) {
-			engine.AddHostObject("host", flags, new HostFunctions());
-			engine.AddHostObject("ext", flags, new ScriptExtension());
-			engine.AddHostObject("clr", flags, new HostTypeCollection("mscorlib", "System", "System.Core"));
-		}
-
-		public void AddHostObject(string name, object obj) {
-			//var a=ExcelDna.Integration.			engine?.AddHostObject(name, flags, obj);
 		}
 	}
 }

@@ -10,7 +10,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace ScriptAddin.Engines
 {
-	public class ScriptExtension : Microsoft.ClearScript.ExtendedHostFunctions
+	internal class ScriptExtension : Microsoft.ClearScript.ExtendedHostFunctions
 	{
 		public DialogResult MsgBox(object Msg, MessageBoxButtons Button = MessageBoxButtons.OK) {
 			return MessageBox.Show(Msg?.ToString(), "ScriptAddin", Button);

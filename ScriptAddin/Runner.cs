@@ -8,20 +8,25 @@ using Avalon = ICSharpCode.AvalonEdit;
 using Excel = Microsoft.Office.Interop.Excel;
 using ExcelDna.Integration;
 using System.Runtime.InteropServices.WindowsRuntime;
-using ScriptAddin.Host;
 
 namespace ScriptAddin
 {
-	static class ScriptRunner
+	static class Runner
 	{
-		static TinyIoC.TinyIoCContainer IoC = TinyIoC.TinyIoCContainer.Current;
+		static readonly TinyIoC.TinyIoCContainer IoC = TinyIoC.TinyIoCContainer.Current;
 
-		static ScriptRunner() {
-			IoC.Register<IEngine, CSharp>("CSharp").AsSingleton();
+		static Runner() {
+			IoC.Register<IEngine, CSharp>(ScriptType.CSharp.ToString()).AsSingleton();
+			IoC.Register<IEngine, VbEngine>(ScriptType.VbScript.ToString()).AsSingleton();
+			IoC.Register<IEngine, JsEngine>(ScriptType.JScript.ToString()).AsSingleton();
+			IoC.Register<IEngine, JsV8Engine>(ScriptType.JsV8.ToString()).AsSingleton();
 		}
 
 		private static IEngine currentEngine = null;
-		private static Excel.Application ExcelApp = (Excel.Application)ExcelDnaUtil.Application;
+		private static Excel.Application ExcelApp = null;
+#if !DEBUG
+		ExcelApp= (Excel.Application) ExcelDnaUtil.Application;
+#endif
 
 		public static string SyntaxHighlightingName { get; private set; }
 		public static bool CanRun { get; private set; } = false;
@@ -34,7 +39,8 @@ namespace ScriptAddin
 					IoC.TryResolve(script.Type.ToString(), out currentEngine);
 					CanRun = currentEngine != null;
 					SyntaxHighlightingName = CanRun ? currentEngine.SyntaxHighlightingName : string.Empty;
-				} else {
+				}
+				else {
 					CanRun = false;
 				}
 			}
@@ -65,7 +71,8 @@ namespace ScriptAddin
 					ExcelApp.Calculation = calcMode;
 					ExcelApp.ScreenUpdating = true;
 				}
-			} else {
+			}
+			else {
 				throw new Exception("Script can't be executed");
 			}
 		}

@@ -1,22 +1,12 @@
-﻿using System;
+﻿using ScriptAddin.Engines;
+using System;
 using System.Globalization;
 using System.Windows.Forms;
 
 
 namespace ScriptAddin
 {
-
-	public enum ScriptType
-	{
-		Folder,
-		VbScript,
-		JScript,
-		JsV8,
-		Python,
-		CSharp
-	}
-
-	public class ScriptItem
+	internal class ScriptItem
 	{
 		public ScriptItem() { }
 
@@ -26,12 +16,12 @@ namespace ScriptAddin
 		public string Code { get; set; }
 		public ScriptType Type { get; set; }
 
-		internal static ScriptItem CreateScript(ScriptType type) {
+		public static ScriptItem CreateScript(ScriptType type) {
 			var name = type == ScriptType.Folder ? "New Folder" : $"New {type} Script";
 			return new ScriptItem { ID = Guid.NewGuid(), Name = name, Type = type };
 		}
 
-		internal static ScriptItem CopyScript(ScriptItem item) {
+		public static ScriptItem CopyScript(ScriptItem item) {
 			return new ScriptItem {
 				ID = Guid.NewGuid(),
 				ParentID = item.ParentID,

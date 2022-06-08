@@ -1,6 +1,5 @@
 ﻿using System;
 using CSScriptLibrary;
-using ScriptAddin.Host;
 
 namespace ScriptAddin.Engines
 {

@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace ScriptAddin
 {
-	public partial class frmEditor : Form
+	public partial class frmNameEditor : Form
 	{
-		public frmEditor() {
+		public frmNameEditor() {
 			InitializeComponent();
 		}
 

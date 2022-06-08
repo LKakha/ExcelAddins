@@ -1,6 +1,6 @@
 ﻿namespace ScriptAddin
 {
-	partial class frmEditor
+	partial class frmNameEditor
 	{
 		/// <summary>
 		/// Required designer variable.

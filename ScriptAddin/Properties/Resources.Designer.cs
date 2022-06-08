@@ -19,7 +19,7 @@ namespace ScriptAddin.Properties {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Resources {
@@ -57,6 +57,24 @@ namespace ScriptAddin.Properties {
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to &lt;customUI xmlns=&quot;http://schemas.microsoft.com/office/2006/01/customui&quot; onLoad=&quot;OnLoad&quot; &gt;
+        ///	&lt;ribbon&gt;
+        ///		&lt;tabs&gt;
+        ///			&lt;tab idMso=&quot;TabAddIns&quot;&gt;
+        ///				&lt;group id=&quot;ScriptAddin&quot; label=&quot;Scripts&quot;&gt;
+        ///					&lt;button id=&quot;btnOpen&quot; onAction=&quot;btnOpen_Click&quot; size=&quot;large&quot; imageMso=&quot;HappyFace&quot; showImage=&quot;true&quot; /&gt;
+        ///				&lt;/group&gt;
+        ///				&lt;group id=&quot;Convertor&quot; label=&quot;Convertor&quot;&gt;
+        ///					&lt;dropDown id=&quot;ddFrom&quot; label=&quot;From&quot; getItemCount=&quot;GetEncodingCount&quot; getItemLabel=&quot;GetEncodingName&quot; onAction=&quot;encFrom_Selected&quot; /&gt;
+        ///					&lt;dropDown id=&quot;ddTo&quot; l [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string ui {
+            get {
+                return ResourceManager.GetString("ui", resourceCulture);
             }
         }
     }

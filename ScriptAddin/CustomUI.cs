@@ -12,26 +12,11 @@ namespace ScriptAddin
 		private Microsoft.Office.Interop.Excel.Application Excel;
 		private IRibbonUI Ribbon;
 		private frmScript MainForm;
+
 		#region CustomUI
 
 		public override string GetCustomUI(string uiName) {
-			return @"
-<customUI xmlns='http://schemas.microsoft.com/office/2006/01/customui' onLoad='OnLoad' >
-	<ribbon>
-		<tabs>
-			<tab idMso='TabAddIns'>
-				<group id='ScriptAddin' label='Scripts'>
-					<button id='btnOpen' onAction='btnOpen_Click' size='large' imageMso='HappyFace' showImage='true' />
-				</group>
-				<group id='Convertor' label='Convertor'>
-					<dropDown id='ddFrom' label='From' getItemCount='GetEncodingCount' getItemLabel='GetEncodingName' onAction='encFrom_Selected' />
-					<dropDown id='ddTo' label='To' getItemCount='GetEncodingCount' getItemLabel='GetEncodingName' onAction='encTo_Selected' />
-					<button id='btnConvert' label='Convert' onAction='btnConvert_Click' />
-				</group>
-			</tab>
-		</tabs>
-	</ribbon>
-</customUI>";
+			return Properties.Resources.ui;
 		}
 
 		public void OnLoad(IRibbonUI RibbonUI) {
@@ -59,6 +44,9 @@ namespace ScriptAddin
 			MainForm.Show();
 		}
 
+		private void mainFormClosed(object sender, FormClosedEventArgs e) {
+			MainForm = null;
+		}
 
 		#region Convertor
 
@@ -84,27 +72,5 @@ namespace ScriptAddin
 			Convertor.Convert(encFrom, encTo);
 		}
 		#endregion
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-		private void mainFormClosed(object sender, FormClosedEventArgs e) {
-			MainForm = null;
-		}
 	}
 }

@@ -10,20 +10,19 @@ using Microsoft.ClearScript;
 
 namespace ScriptAddin.Engines
 {
-	public class VbEngine : IEngine
+	internal class VbEngine : IEngine
 	{
-		private static Avalon.Highlighting.IHighlightingDefinition highlightingDefinition = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition("VB");
-		private const HostItemFlags flags = HostItemFlags.DirectAccess;
-		public ScriptType Type => ScriptType.VB;
-		public Avalon.Highlighting.IHighlightingDefinition HighlightingDefinition => highlightingDefinition;
+		public ScriptType Type => ScriptType.VbScript;
+		public string SyntaxHighlightingName { get; } = "VB";
 
+		private const HostItemFlags flags = HostItemFlags.DirectAccess;
 		private VBScriptEngine engine;
 
-		public void Execute(string code, Action<IEngine> initAction = null) {
+		public void Execute(string code, HostObject host) {
 			try {
 				using (engine = new VBScriptEngine()) {
-					initEngine(engine);
-					initAction(this);
+					engine.AddHostObject("host", new HostFunctions());
+					engine.AddHostObject("clr", new HostTypeCollection("mscorlib", "System", "System.Core"));
 
 					engine.Execute(code);
 					engine.CollectGarbage(false);
@@ -36,18 +35,6 @@ namespace ScriptAddin.Engines
 				throw ex;
 			}
 		}
-
-		private void initEngine(VBScriptEngine engine) {
-			engine.AddHostObject("host", new HostFunctions());
-			engine.AddHostObject("ext", new ScriptExtension());
-			engine.AddHostObject("clr", new HostTypeCollection("mscorlib", "System", "System.Core"));
-		}
-
-		public void AddHostObject(string name, object obj) {
-			engine?.AddHostObject(name, flags, obj);
-		}
-
 	}
-
 }
 

@@ -1,4 +1,5 @@
 ﻿using ExcelDna.Integration;
+using ScriptAddin.Engines;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -11,18 +12,13 @@ namespace ScriptAddin
 {
 	public partial class frmScript : Form
 	{
-		public frmScript() {
-			try {
-				InitializeComponent();
-			}
-			catch (Exception ex) {
-				MessageBox.Show(ex.Message);
-			}
-		}
-
 		private const string caption = "Excel Scripts";
 		private Db4objects.Db4o.IObjectContainer db;
 		private List<ScriptItem> ScriptList;
+
+		public frmScript() {
+			InitializeComponent();
+		}
 
 		private void frmScripts_Load(object sender, EventArgs e) {
 			CodeEditor.Control.Options.IndentationSize = 2;
@@ -32,10 +28,14 @@ namespace ScriptAddin
 		}
 
 		private void loadScripts() {
+#if DEBUG
+			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(Application.StartupPath + "\\Scripts.db");
+#else
 			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(System.IO.Path.GetDirectoryName(ExcelDnaUtil.XllPath) + "\\Scripts.db");
-			//db = Db4objects.Db4o.Db4oEmbedded.OpenFile("Scripts.db");
+#endif
 			ScriptList = (from i in db.Query<ScriptItem>() orderby i.Type, i.Name select i).ToList();
 		}
+
 		private void loadTree(TreeNode parentNode, ref List<ScriptItem> items) {
 			var parentId = Guid.Empty;
 			if (parentNode != null) parentId = (Guid)parentNode.Tag;
@@ -67,20 +67,22 @@ namespace ScriptAddin
 			get { return currentScript; }
 			set {
 				currentScript = value;
-				ScriptRunner.Script = currentScript;
-				CodeEditor.SyntaxHighlighting = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition(ScriptRunner.SyntaxHighlightingName ?? string.Empty);
+				Runner.Script = currentScript;
+				CodeEditor.SyntaxHighlighting = Avalon.Highlighting.HighlightingManager.Instance.GetDefinition(Runner.SyntaxHighlightingName ?? string.Empty);
 				CodeEditor.Text = currentScript?.Code;
 				if (currentScript != null && currentScript.Type != ScriptType.Folder) {
 					this.Text = $"{caption} : {currentScript.Name} : {currentScript.Type}";
-				} else { this.Text = caption; }
+				}
+				else { this.Text = caption; }
 
-				if (ScriptRunner.CanRun) {
+				if (Runner.CanRun) {
 					btnRun.Enabled = true;
 					CodeEditor.IsReadOnly = false;
 					btnSave.Enabled = true;
 					btnDelete.Enabled = true;
 					this.Text = $"{caption} : {currentScript.Name} : {currentScript.Type}";
-				} else {
+				}
+				else {
 					btnRun.Enabled = false;
 					CodeEditor.IsReadOnly = true;
 					btnSave.Enabled = false;
@@ -110,15 +112,18 @@ namespace ScriptAddin
 			var currentNode = tvScripts.SelectedNode;
 			if (currentNode == null) {
 				tvScripts.Nodes.Add(newNode);
-			} else {
+			}
+			else {
 				if (CurrentScript.Type == ScriptType.Folder) {
 					currentNode.Nodes.Add(newNode);
 					currentNode.Expand();
 					item.ParentID = (Guid)currentNode.Tag;
-				} else {
+				}
+				else {
 					if (currentNode.Parent == null) {
 						tvScripts.Nodes.Add(newNode);
-					} else {
+					}
+					else {
 						currentNode.Parent.Nodes.Add(newNode);
 						item.ParentID = (Guid)currentNode.Parent.Tag;
 					}
@@ -133,7 +138,7 @@ namespace ScriptAddin
 		}
 
 		private string getNewName(string name) {
-			var editor = new frmEditor();
+			var editor = new frmNameEditor();
 			editor.EditedString = name;
 			if (editor.ShowDialog() == DialogResult.Cancel) return null;
 			name = editor.EditedString;
@@ -199,7 +204,8 @@ namespace ScriptAddin
 				if (targetNode == null) {
 					tvScripts.Nodes.Add(draggedNode);
 					draggedItem.ParentID = Guid.Empty;
-				} else {
+				}
+				else {
 					targetNode.Nodes.Add(draggedNode);
 					targetNode.Expand();
 					draggedItem.ParentID = targetItem.ID;
@@ -223,7 +229,8 @@ namespace ScriptAddin
 				CurrentScript.Name = name;
 				db.Store(CurrentScript);
 				db.Commit();
-			} else {
+			}
+			else {
 				e.CancelEdit = true;
 			}
 		}
@@ -235,7 +242,7 @@ namespace ScriptAddin
 		private void btnRun_Click(object sender, EventArgs e) {
 			try {
 				lblStatus.Text = string.Empty;
-				var result = ScriptRunner.Execute(CodeEditor.Text);
+				var result = Runner.Execute(CodeEditor.Text);
 				lblStatus.Text = result;
 			}
 			catch (Exception ex) {
