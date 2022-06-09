@@ -1,17 +1,15 @@
 ﻿using ExcelDna.Integration.CustomUI;
-using ScriptAddin.Engines;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 
 namespace ScriptAddin
 {
 	[ComVisible(true)]
 	public class CustomUI : ExcelRibbon
 	{
-		private Microsoft.Office.Interop.Excel.Application Excel;
 		private IRibbonUI Ribbon;
-		private frmScript MainForm;
 
 		#region CustomUI
 
@@ -21,7 +19,6 @@ namespace ScriptAddin
 
 		public void OnLoad(IRibbonUI RibbonUI) {
 			try {
-				Excel = (Microsoft.Office.Interop.Excel.Application)ExcelDna.Integration.ExcelDnaUtil.Application;
 				Ribbon = RibbonUI;
 			}
 			catch (Exception ex) {
@@ -31,22 +28,17 @@ namespace ScriptAddin
 		#endregion
 
 		public void btnOpen_Click(IRibbonControl control) {
-			if (MainForm == null) {
-				try {
-					MainForm = new frmScript();
-					MainForm.FormClosed += mainFormClosed;
-				}
-				catch (Exception ex) {
-					MessageBox.Show(ex.Message);
-				}
+			try {
+				var MainForm = new frmScript();
+				MainForm.WindowState = FormWindowState.Normal;
+				MainForm.Show();
 			}
-			MainForm.WindowState = FormWindowState.Normal;
-			MainForm.Show();
+			catch (Exception ex) {
+				MessageBox.Show(ex.Message);
+			}
 		}
 
-		private void mainFormClosed(object sender, FormClosedEventArgs e) {
-			MainForm = null;
-		}
+
 
 		#region Convertor
 

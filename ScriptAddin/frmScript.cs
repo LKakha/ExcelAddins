@@ -1,20 +1,41 @@
-﻿using ExcelDna.Integration;
-using ScriptAddin.Engines;
+﻿using ScriptAddin.Engines;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Avalon = ICSharpCode.AvalonEdit;
+#if !DEBUG
+using ExcelDna.Integration;
+using Excel = Microsoft.Office.Interop.Excel;
+#endif
 
 namespace ScriptAddin
 {
 	public partial class frmScript : Form
 	{
+		static readonly TinyIoC.TinyIoCContainer IoC = TinyIoC.TinyIoCContainer.Current;
 		private const string caption = "Excel Scripts";
-		private Db4objects.Db4o.IObjectContainer db;
+		private Db db;
 		private List<ScriptItem> ScriptList;
+		private Runner Runner;
+
+
+
+		static frmScript() {
+#if !DEBUG
+			IoC.Register(ExcelDnaUtil.Application as Excel.Application);
+#endif
+			IoC.Register<Runner>().AsSingleton();
+			IoC.Register<Db>().AsSingleton();
+			IoC.Register<frmScript>().AsSingleton();
+
+			IoC.Register<IEngine, CSharp>(ScriptType.CSharp.ToString()).AsSingleton();
+			IoC.Register<IEngine, VbEngine>(ScriptType.VbScript.ToString()).AsSingleton();
+			IoC.Register<IEngine, JsEngine>(ScriptType.JScript.ToString()).AsSingleton();
+			IoC.Register<IEngine, JsV8Engine>(ScriptType.JsV8.ToString()).AsSingleton();
+			IoC.Register<IEngine, Python>(ScriptType.Python.ToString()).AsSingleton();
+		}
 
 		public frmScript() {
 			InitializeComponent();
@@ -22,19 +43,18 @@ namespace ScriptAddin
 
 		private void frmScripts_Load(object sender, EventArgs e) {
 			CodeEditor.Control.Options.IndentationSize = 2;
-			loadScripts();
+			db = IoC.Resolve<Db>();
+			ScriptList = db.GetScriptItems().ToList();
 			loadTree(null, ref ScriptList);
+			Runner = IoC.Resolve<Runner>();
 			CurrentScript = null;
+
+			btnNew.DropDownItems.AddRange(
+				Enum.GetNames(typeof(ScriptType)).Select(x => {
+					return new ToolStripMenuItem(x, null, newScript);
+				}).ToArray());
 		}
 
-		private void loadScripts() {
-#if DEBUG
-			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(Application.StartupPath + "\\Scripts.db");
-#else
-			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(System.IO.Path.GetDirectoryName(ExcelDnaUtil.XllPath) + "\\Scripts.db");
-#endif
-			ScriptList = (from i in db.Query<ScriptItem>() orderby i.Type, i.Name select i).ToList();
-		}
 
 		private void loadTree(TreeNode parentNode, ref List<ScriptItem> items) {
 			var parentId = Guid.Empty;
@@ -50,9 +70,10 @@ namespace ScriptAddin
 		}
 
 		private TreeNode buildNode(ScriptItem item) {
-			var node = new TreeNode();
-			node.Tag = item.ID;
-			node.Text = item.Name;
+			var node = new TreeNode {
+				Tag = item.ID,
+				Text = item.Name
+			};
 			if (item.Type == ScriptType.Folder)
 				node.ImageIndex = 2;
 			else if (item.ParentID == Guid.Empty)
@@ -94,9 +115,9 @@ namespace ScriptAddin
 
 
 		#region Edit
-		private void btnNew_Click(object sender, EventArgs e) {
+		private void newScript(object sender, EventArgs e) {
 			var btn = (ToolStripMenuItem)sender;
-			if (Enum.TryParse<ScriptType>(btn.Tag.ToString(), out var type)) {
+			if (Enum.TryParse<ScriptType>(btn.Text.ToString(), out var type)) {
 				createNew(null, type);
 			}
 		}
@@ -131,15 +152,15 @@ namespace ScriptAddin
 			}
 
 			db.Store(item);
-			db.Commit();
 			ScriptList.Add(item);
 			CurrentScript = item;
 			tvScripts.SelectedNode = newNode;
 		}
 
 		private string getNewName(string name) {
-			var editor = new frmNameEditor();
-			editor.EditedString = name;
+			var editor = new frmNameEditor {
+				EditedString = name
+			};
 			if (editor.ShowDialog() == DialogResult.Cancel) return null;
 			name = editor.EditedString;
 			editor.Dispose();
@@ -148,7 +169,6 @@ namespace ScriptAddin
 
 		private void delete(object sender, EventArgs e) {
 			db.Delete(CurrentScript);
-			db.Commit();
 			ScriptList.Remove(CurrentScript);
 			tvScripts.SelectedNode.Remove();
 			CurrentScript = getItemByNode(tvScripts.SelectedNode);
@@ -157,7 +177,6 @@ namespace ScriptAddin
 		private void btnSave_Click(object sender, EventArgs e) {
 			CurrentScript.Code = CodeEditor.Text;
 			db.Store(CurrentScript);
-			db.Commit();
 		}
 
 		private void btnSaveAs_Click(object sender, EventArgs e) {
@@ -219,7 +238,6 @@ namespace ScriptAddin
 				draggedNode.SelectedImageIndex = draggedNode.ImageIndex;
 
 				db.Store(draggedItem);
-				db.Commit();
 			}
 		}
 
@@ -228,7 +246,6 @@ namespace ScriptAddin
 			if (!string.IsNullOrWhiteSpace(name)) {
 				CurrentScript.Name = name;
 				db.Store(CurrentScript);
-				db.Commit();
 			}
 			else {
 				e.CancelEdit = true;
@@ -251,12 +268,8 @@ namespace ScriptAddin
 		}
 		#endregion
 
-		private void Me_FormClosing(object sender, FormClosingEventArgs e) {
-			db.Close();
-		}
-
 		private void ActivateForm(object sender, EventArgs e) {
-			this.Activate();
+			//	this.Activate();
 		}
 
 	}

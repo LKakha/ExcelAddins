@@ -10,13 +10,10 @@ public static class MyFunctions
 	private static SqlCommand Comm;
 	private static bool ConnectionIsValid = false;
 
-	public static void SetConnection()
-	{
+	public static void SetConnection() {
 		ConnectionIsValid = ServerIsPingable();
-		if (ConnectionIsValid)
-		{
-			try
-			{
+		if (ConnectionIsValid) {
+			try {
 				Conn = new SqlConnection(ConnString);
 				Conn.Open();
 				Comm = new SqlCommand("usp_TIDB", Conn) { CommandType = CommandType.StoredProcedure };
@@ -29,8 +26,7 @@ public static class MyFunctions
 				P = new SqlParameter("@Par4", SqlDbType.Variant); P.IsNullable = true; Comm.Parameters.Add(P);
 				P = new SqlParameter("@Par5", SqlDbType.Variant); P.IsNullable = true; Comm.Parameters.Add(P);
 			}
-			catch (Exception ex)
-			{
+			catch (Exception ex) {
 				ConnectionIsValid = false;
 				System.Windows.Forms.MessageBox.Show(ex.Message);
 			}
@@ -38,18 +34,15 @@ public static class MyFunctions
 	}
 
 	[ExcelFunction(Description = "ინფორმაცია TaxInfo-დან")]
-	public static object TIDB(int C, string Par1 = null, string Par2 = null, string Par3 = null, string Par4 = null, string Par5 = null)
-	{
-		if (ConnectionIsValid)
-		{
+	public static object TIDB(int C, string Par1 = null, string Par2 = null, string Par3 = null, string Par4 = null, string Par5 = null) {
+		if (ConnectionIsValid) {
 			if (string.IsNullOrEmpty(Par1)) Par1 = null;
 			if (string.IsNullOrEmpty(Par2)) Par2 = null;
 			if (string.IsNullOrEmpty(Par3)) Par3 = null;
 			if (string.IsNullOrEmpty(Par4)) Par4 = null;
 			if (string.IsNullOrEmpty(Par5)) Par5 = null;
 
-			try
-			{
+			try {
 				Comm.Parameters[0].SqlValue = C;
 				Comm.Parameters[1].SqlValue = Par1;
 				Comm.Parameters[2].SqlValue = Par2;
@@ -60,8 +53,7 @@ public static class MyFunctions
 				if (R == null || R == DBNull.Value) return ExcelError.ExcelErrorNA;
 				return R;
 			}
-			catch (Exception ex)
-			{
+			catch (Exception ex) {
 				return ex.Message;
 			}
 		}
@@ -69,18 +61,15 @@ public static class MyFunctions
 			return "სერვერთან კავშირი არ არის";
 	}
 
-	private static bool ServerIsPingable()
-	{
+	private static bool ServerIsPingable() {
 		var ConBld = new SqlConnectionStringBuilder(ConnString);
 		var Server = ConBld.DataSource;
 		var P = new System.Net.NetworkInformation.Ping();
-		try
-		{
+		try {
 			var R = P.Send(Server, 1000).Status;
 			return R == System.Net.NetworkInformation.IPStatus.Success;
 		}
-		catch (Exception ex)
-		{
+		catch (Exception ex) {
 			System.Windows.Forms.MessageBox.Show(ex.Message);
 			return false;
 		}

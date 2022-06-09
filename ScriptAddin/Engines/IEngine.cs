@@ -7,7 +7,7 @@ namespace ScriptAddin.Engines
 
 		string SyntaxHighlightingName { get; }
 
-		void Execute(string code, HostObject host);
+		void Execute(string code, XlsObject host);
 
 	}
 }

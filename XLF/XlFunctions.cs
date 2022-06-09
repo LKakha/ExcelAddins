@@ -1,7 +1,4 @@
 ﻿using ExcelDna.Integration;
-using System;
-using System.Data;
-using System.Data.SqlClient;
 using System.Text;
 
 public static class XlFunctions

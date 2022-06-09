@@ -98,7 +98,6 @@ namespace TinyIoC
 {
 	using System;
 	using System.Collections.Generic;
-	using System.Collections.ObjectModel;
 	using System.Linq;
 	using System.Reflection;
 
@@ -132,11 +131,8 @@ namespace TinyIoC
 				_padlock.EnterWriteLock();
 
 				try {
-					TValue current;
-					if (_Dictionary.TryGetValue(key, out current)) {
-						var disposable = current as IDisposable;
-
-						if (disposable != null)
+					if (_Dictionary.TryGetValue(key, out TValue current)) {
+						if (current is IDisposable disposable)
 							disposable.Dispose();
 					}
 
@@ -600,8 +596,7 @@ namespace TinyIoC
 			}
 
 			public override bool Equals(object obj) {
-				var cacheKey = obj as GenericMethodCacheKey;
-				if (cacheKey == null)
+				if (!(obj is GenericMethodCacheKey cacheKey))
 					return false;
 
 				if (_sourceType != cacheKey._sourceType)
@@ -1121,12 +1116,10 @@ namespace TinyIoC
 				if (!IsValidAssignment(_Registration.Type, typeof(RegisterType)))
 					throw new TinyIoCConstructorResolutionException(typeof(RegisterType));
 
-				var lambda = constructor as LambdaExpression;
-				if (lambda == null)
+				if (!(constructor is LambdaExpression lambda))
 					throw new TinyIoCConstructorResolutionException(typeof(RegisterType));
 
-				var newExpression = lambda.Body as NewExpression;
-				if (newExpression == null)
+				if (!(lambda.Body is NewExpression newExpression))
 					throw new TinyIoCConstructorResolutionException(typeof(RegisterType));
 
 				var constructorInfo = newExpression.Constructor;
@@ -2301,14 +2294,13 @@ namespace TinyIoC
 		/// <typeparam name="ResolveType">Type to resolve</typeparam>
 		/// <param name="resolvedType">Resolved type or default if resolve fails</param>
 		/// <returns>True if resolved successfully, false otherwise</returns>
-		public bool TryResolve<ResolveType>(out ResolveType resolvedType)
-				where ResolveType : class {
+		public bool TryResolve<ResolveType>(out ResolveType resolvedType) where ResolveType : class {
 			try {
 				resolvedType = Resolve<ResolveType>();
 				return true;
 			}
 			catch (TinyIoCResolutionException) {
-				resolvedType = default(ResolveType);
+				resolvedType = default;
 				return false;
 			}
 		}
@@ -2327,7 +2319,7 @@ namespace TinyIoC
 				return true;
 			}
 			catch (TinyIoCResolutionException) {
-				resolvedType = default(ResolveType);
+				resolvedType = default;
 				return false;
 			}
 		}
@@ -2720,9 +2712,7 @@ namespace TinyIoC
 			public override Type CreatesType { get { return this.registerType; } }
 
 			public override object GetObject(Type requestedType, TinyIoCContainer container, NamedParameterOverloads parameters, ResolveOptions options) {
-				var factory = _factory.Target as Func<TinyIoCContainer, NamedParameterOverloads, object>;
-
-				if (factory == null)
+				if (!(_factory.Target is Func<TinyIoCContainer, NamedParameterOverloads, object> factory))
 					throw new TinyIoCWeakReferenceException(this.registerType);
 
 				try {
@@ -2744,9 +2734,7 @@ namespace TinyIoC
 
 			public override ObjectFactoryBase StrongReferenceVariant {
 				get {
-					var factory = _factory.Target as Func<TinyIoCContainer, NamedParameterOverloads, object>;
-
-					if (factory == null)
+					if (!(_factory.Target is Func<TinyIoCContainer, NamedParameterOverloads, object> factory))
 						throw new TinyIoCWeakReferenceException(this.registerType);
 
 					return new DelegateFactory(this.registerType, factory);
@@ -2813,9 +2801,7 @@ namespace TinyIoC
 			}
 
 			public void Dispose() {
-				var disposable = _instance as IDisposable;
-
-				if (disposable != null)
+				if (_instance is IDisposable disposable)
 					disposable.Dispose();
 			}
 		}
@@ -2956,9 +2942,7 @@ namespace TinyIoC
 				if (this._Current == null)
 					return;
 
-				var disposable = this._Current as IDisposable;
-
-				if (disposable != null)
+				if (this._Current is IDisposable disposable)
 					disposable.Dispose();
 			}
 		}
@@ -3796,7 +3780,8 @@ namespace TinyIoC
 			if (!registerType.IsGenericTypeDefinition()) {
 				if (!registerType.IsAssignableFrom(registerImplementation))
 					return false;
-			} else {
+			}
+			else {
 				if (registerType.IsInterface()) {
 #if (PORTABLE || NETSTANDARD1_0 || NETSTANDARD1_1 || NETSTANDARD1_2 || NETSTANDARD1_3 || NETSTANDARD1_4 || NETSTANDARD1_5 || NETSTANDARD1_6)
                     if (!registerImplementation.GetInterfaces().Any(t => t.Name == registerType.Name))
@@ -3805,7 +3790,8 @@ namespace TinyIoC
 					if (!registerImplementation.FindInterfaces((t, o) => t.Name == registerType.Name, null).Any())
 						return false;
 #endif
-				} else if (registerType.IsAbstract() && registerImplementation.BaseType() != registerType) {
+				}
+				else if (registerType.IsAbstract() && registerImplementation.BaseType() != registerType) {
 					return false;
 				}
 			}

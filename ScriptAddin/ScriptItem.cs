@@ -1,12 +1,9 @@
-﻿using ScriptAddin.Engines;
-using System;
-using System.Globalization;
-using System.Windows.Forms;
+﻿using System;
 
 
 namespace ScriptAddin
 {
-	internal class ScriptItem
+	public class ScriptItem
 	{
 		public ScriptItem() { }
 

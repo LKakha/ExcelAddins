@@ -1,5 +1,5 @@
 <DnaLibrary Name="ScriptAddin" RuntimeVersion="v4.0">
-	<ExternalLibrary Path="ScriptAddin.dll" Pack="true" />
+	<ExternalLibrary Path="ScriptAddin.dll" ExplicitExports="false" Pack="true" IncludePdb="false" />
 	<Reference Path="ICSharpCode.AvalonEdit.dll" Pack="true" />
 	<Reference Path="Db4objects.Db4o.Data.Services.dll" Pack="true" />
 	<Reference Path="Db4objects.Db4o.dll" Pack="true" />

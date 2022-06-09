@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Test
@@ -15,7 +12,15 @@ namespace Test
 		static void Main() {
 			Application.EnableVisualStyles();
 			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new ScriptAddin.frmScript());
+			try {
+				Application.Run(new ScriptAddin.frmScript());
+
+			}
+			catch (Exception ex) {
+
+				MessageBox.Show(ex.ToString());
+
+			}
 		}
 	}
 }
