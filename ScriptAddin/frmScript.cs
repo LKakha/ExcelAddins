@@ -33,7 +33,6 @@ namespace ScriptAddin
 			IoC.Register<IEngine, CSharp>(ScriptType.CSharp.ToString()).AsSingleton();
 			IoC.Register<IEngine, VbEngine>(ScriptType.VbScript.ToString()).AsSingleton();
 			IoC.Register<IEngine, JsEngine>(ScriptType.JScript.ToString()).AsSingleton();
-			IoC.Register<IEngine, JsV8Engine>(ScriptType.JsV8.ToString()).AsSingleton();
 			IoC.Register<IEngine, Python>(ScriptType.Python.ToString()).AsSingleton();
 		}
 
@@ -272,5 +271,8 @@ namespace ScriptAddin
 			//	this.Activate();
 		}
 
+		private void frmScript_MouseEnter(object sender, EventArgs e) {
+			this.Activate();
+		}
 	}
 }

@@ -206,6 +206,7 @@
 			this.Text = "Scripts";
 			this.TopMost = true;
 			this.Load += new System.EventHandler(this.frmScripts_Load);
+			this.MouseEnter += new System.EventHandler(this.frmScript_MouseEnter);
 			this.toolStrip1.ResumeLayout(false);
 			this.toolStrip1.PerformLayout();
 			this.splitContainer1.Panel1.ResumeLayout(false);

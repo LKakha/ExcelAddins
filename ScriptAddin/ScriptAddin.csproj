@@ -207,10 +207,8 @@
     </Compile>
     <Compile Include="Db.cs" />
     <Compile Include="Engines\ClearScript\JsEngine.cs" />
-    <Compile Include="Engines\ClearScript\JsV8Engine.cs" />
     <Compile Include="Engines\ClearScript\VbEngine.cs" />
     <Compile Include="Engines\IronPython\Python.cs" />
-    <Compile Include="HostObject.cs" />
     <Compile Include="Other\Convertor.cs" />
     <Compile Include="CustomUI.cs" />
     <Compile Include="Engines\CSScript\CSharp.cs" />
@@ -263,7 +261,12 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\ScriptAddin.Xls\ScriptAddin.Xls.csproj">
+      <Project>{0047ca76-8e43-402f-8912-424b56160d30}</Project>
+      <Name>ScriptAddin.Xls</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <Resource Include="ui.xml" />
   </ItemGroup>

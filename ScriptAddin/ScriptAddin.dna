@@ -4,6 +4,15 @@
 	<Reference Path="Db4objects.Db4o.Data.Services.dll" Pack="true" />
 	<Reference Path="Db4objects.Db4o.dll" Pack="true" />
 	<Reference Path="Db4objects.Db4o.Linq.dll" Pack="true" />
+	<Reference Path="ClearScript.Core.dll" Pack="true" />
+	<Reference Path="ClearScript.Windows.Core.dll" Pack="true" />
+	<Reference Path="ClearScript.Windows.dll" Pack="true" />
+	<Reference Path="IronPython.dll" Pack="true" />
+	<Reference Path="IronPython.Modules.dll" Pack="true" />
+	<Reference Path="Microsoft.Dynamic.dll" Pack="true" />
+	<Reference Path="Microsoft.Office.Interop.Excel.dll" Pack="true" />
+	<Reference Path="Microsoft.Scripting.dll" Pack="true" />
+	<Reference Path="Mono.Reflection.dll" Pack="true" />
 	<Reference Path="CSScriptLibrary.dll" Pack="true" />
 
 </DnaLibrary>

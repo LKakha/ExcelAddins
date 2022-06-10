@@ -14,7 +14,7 @@ namespace ScriptAddin
 
 		public Db() {
 #if DEBUG
-			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(Application.StartupPath + "\\Scripts.db");
+			db = Db4objects.Db4o.Db4oEmbedded.OpenFile("Scripts.db");
 #else
 			db = Db4objects.Db4o.Db4oEmbedded.OpenFile(System.IO.Path.GetDirectoryName(ExcelDnaUtil.XllPath) + "\\Scripts.db");
 #endif
