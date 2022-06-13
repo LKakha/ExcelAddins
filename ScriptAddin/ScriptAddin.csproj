@@ -206,9 +206,11 @@
       <DependentUpon>CodeEditor.xaml</DependentUpon>
     </Compile>
     <Compile Include="Db.cs" />
+    <Compile Include="Engines\ClearScript\EngineBase.cs" />
     <Compile Include="Engines\ClearScript\JsEngine.cs" />
     <Compile Include="Engines\ClearScript\VbEngine.cs" />
     <Compile Include="Engines\IronPython\Python.cs" />
+    <Compile Include="Engines\ClearScript\ScriptExtensions.cs" />
     <Compile Include="Other\Convertor.cs" />
     <Compile Include="CustomUI.cs" />
     <Compile Include="Engines\CSScript\CSharp.cs" />

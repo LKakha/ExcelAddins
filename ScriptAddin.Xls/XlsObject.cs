@@ -9,9 +9,9 @@ namespace ScriptAddin
 		public XlsObject(Excel.Application app) {
 			App = app;
 			Book = app.ActiveWorkbook;
-			Sheet = app.ActiveSheet as Excel.Worksheet;
+			Sheet = (Excel.Worksheet)app.ActiveSheet;
 			Cells = Sheet.Cells;
-			Sel = app.Selection as Excel.Range;
+			Sel = (Excel.Range)app.Selection;
 		}
 
 		public Excel.Application App { get; private set; }
